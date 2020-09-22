@@ -6,23 +6,25 @@ const rl = readline.createInterface({
 rl.setPrompt(`숫자입력> `);
 rl.prompt();
 rl.on(`line`, function (x) {
-  let num = parseInt(x);
-  let n 
+  let temp = parseInt(x);
+  let num = temp
   let cycle = 0
   let step = 0
-  let same = true
-  while (same) {
+  while (true) {
     cycle++;
-    if (n < 10) {
-      step = n%10;
+    if (temp < 10) {
+      step = temp % 10;
     }
     else {
-      step = n/10 + n%10;
+      step = temp / 10 + temp % 10;
     }
-    n = n%10*10 + step%10;
-    n = Number(n);  
-    if(n===num){
+    temp = temp % 10 * 10 + step % 10;
+    temp = Number(temp);
+    if (temp === num) {
       break;
+    }
+    if (cycle > 100) {
+      break
     }
   }
   console.log(cycle);
