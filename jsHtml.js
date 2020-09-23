@@ -7,7 +7,8 @@ let products = [
   { name: `수박`, price: 5000 },
 ];
 
-let html = `<table>
+let html = `<div class = "container">
+<table class = "table table-dark">
 <tr>
   <th>품목</th>
   <th>가격</th>
@@ -16,10 +17,11 @@ let html = `<table>
 
 for(let product of products){
 html += `<tr>
-  <th>${product.name}</th>
-  <th>${product.price}</th>
+  <td>${product.name}</td>
+  <td>${product.price}</td>
 </tr>
-`
+`;
 }
-html += `</table>`
+html += `</table>
+</div>`
 console.log(html);
