@@ -1,5 +1,6 @@
 package-lock.json
 /tmp
+/10.http/media
 # Logs
 logs
 *.log
