@@ -27,7 +27,6 @@ http.createServer(function (req, res) {
           let control = template.buttonGen(title);
           let filename = 'data/' + title + '.txt';
           fs.readFile(filename, 'utf8', (error, buffer) => {
-            buffer = buffer.replace(/\n/g,'<br>' )
             let html = view.index(title, list, buffer, control);
             res.end(html);
           });
@@ -53,8 +52,7 @@ http.createServer(function (req, res) {
         //console.log(param.subject, param.description);
         let filepath = 'data/' + param.subject + '.txt';
         fs.writeFile(filepath, param.description, error => {
-          let encoded = encodeURI(`/?id=${param.subject}`)
-          res.writeHead(302, { 'Location': encoded });
+          res.writeHead(302, {'Location': `/?id=${param.subject}` });
           res.end();
         });
       });
@@ -75,7 +73,7 @@ http.createServer(function (req, res) {
       })
       req.on('end', function () {
         let param = qs.parse(body);
-        console.log(param.subject, param.description);
+        //console.log(param.subject, param.description);
         let filepath = 'data/' + param.subject + '.txt';
         fs.unlink(filepath, error => {
           res.writeHead(302, { 'Location': `/` });
@@ -83,56 +81,10 @@ http.createServer(function (req, res) {
         });
       });
       break;
-    case '/update':
-      fs.readdir('data', function (error, filelist) {
-        let list = template.listGen(filelist);
-        let title = query.id;
-        let control = template.buttonGen();
-        let filename = 'data/' + title + '.txt';
-        fs.readFile(filename, 'utf8', (error, buffer) => {
-          
-          let content = template.updateForm(title, buffer)
-          let html = view.index(`${title} 수정`, list, content, control);
-          res.end(html);
-        });
-      });
-      break;
-    case '/update_proc':
-      body = '';
-      req.on('data', function (data) {
-        body += data;
-      })
-      req.on('end', function () {
-        let param = qs.parse(body);
-        console.log(param.subject, param.description,param.original);
-        let filepath = 'data/' + param.original + '.txt';
-        console.log(filepath);
-        fs.writeFile(filepath, param.description, error => {
-          let encoded = encodeURI(`/?id=${param.subject}`)
-        /*   if (param.original !== param.subject) {
-            fs.rename(filepath, `data/${param.subject}.txt`, error => {
-              res.writeHead(302, { 'Location': encoded });
-              res.end();
-            })
-          } else {
-
-            res.writeHead(302, { 'Location': encoded });
-            res.end();
-          } */
-          //편법이긴 하지만 싱크를 이용해서 더 간단하게도 나타냄
-          //nodeJS에서는 권장하지 않음
-          if (param.original != param.subject) {
-            fs.renameSync(filepath, `data/${param.subject}.txt`)
-          }
-          res.writeHead(302, { 'Location': `data/${param.subject}.txt` });
-          res.end();
-        });
-      });
-      break;
     default:
       res.writeHead(404);
       res.end();
-  } break;
+  }
 }).listen(3000, () => {
   console.log('Server running at http://localhost:3000');
 }); 
